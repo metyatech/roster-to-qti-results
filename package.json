@@ -1,0 +1,25 @@
+{
+  "name": "roster-to-qti-results",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Generate QTI 3.0 Results Reporting XML from roster CSV files.",
+  "bin": {
+    "roster-to-qti-results": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "tsc --noEmit",
+    "test": "tsx test/run-tests.ts",
+    "roster-to-qti-results": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.6",
+    "fast-xml-parser": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.5"
+  }
+}
