@@ -31,7 +31,6 @@ assessmentResult
 
 - `context/@sourcedId`: `candidate_number`
 - `sessionIdentifier[sourceID="candidateName"]`: `candidate_name`
-- `sessionIdentifier[sourceID="materialTitle"]`: `--material-title`
 - `sessionIdentifier[sourceID="candidateId"]`: `candidate_id` when provided
 - `sessionIdentifier[sourceID="candidateAccount"]`: `candidate_account` when provided
 - `testResult/@identifier`: `--test-result-identifier` (default: `assessment-test`)

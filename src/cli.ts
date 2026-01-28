@@ -12,12 +12,11 @@ const HELP_TEXT = `roster-to-qti-results
 
 Usage:
   roster-to-qti-results --roster <path> --assessment-test <path> \
-    --material-title <value> [options]
+    [options]
 
 Required options:
   --roster <path>           Roster CSV path (use '-' to read from stdin)
   --assessment-test <path>  QTI assessment test XML
-  --material-title <value>  Material title for results metadata
 
 Optional options:
   --output <dir>            Output directory (default: qti-results)
@@ -35,7 +34,6 @@ Optional options:
 type CliArgs = {
   roster: string | null;
   assessmentTest: string | null;
-  materialTitle: string | null;
   testResultIdentifier: string | null;
   testResultDatestamp: string | null;
   outputDir: string;
@@ -65,7 +63,6 @@ function parseArgs(argv: string[]): CliArgs {
   const args: CliArgs = {
     roster: null,
     assessmentTest: null,
-    materialTitle: null,
     testResultIdentifier: null,
     testResultDatestamp: null,
     outputDir: "qti-results",
@@ -95,11 +92,6 @@ function parseArgs(argv: string[]): CliArgs {
     }
     if (arg === "--assessment-test") {
       args.assessmentTest = argv[i + 1] ?? null;
-      i += 1;
-      continue;
-    }
-    if (arg === "--material-title") {
-      args.materialTitle = argv[i + 1] ?? null;
       i += 1;
       continue;
     }
@@ -256,12 +248,11 @@ function escapeXml(value: string): string {
 
 function buildAssessmentResultXml(options: {
   row: RosterRow;
-  materialTitle: string;
   testResultIdentifier: string;
   testResultDatestamp?: string;
   itemIds: string[];
 }): string {
-  const { row, materialTitle, testResultIdentifier, testResultDatestamp, itemIds } = options;
+  const { row, testResultIdentifier, testResultDatestamp, itemIds } = options;
   const lines: string[] = [];
   lines.push(`<?xml version=\"1.0\" encoding=\"UTF-8\"?>`);
   lines.push(
@@ -281,9 +272,6 @@ function buildAssessmentResultXml(options: {
       `    <sessionIdentifier sourceID=\"candidateAccount\" identifier=\"${escapeXml(row.candidateAccount)}\" />`,
     );
   }
-  lines.push(
-    `    <sessionIdentifier sourceID=\"materialTitle\" identifier=\"${escapeXml(materialTitle)}\" />`,
-  );
   lines.push("  </context>");
   if (testResultDatestamp) {
     lines.push(
@@ -330,7 +318,6 @@ function ensureWritable(outputDir: string, outputs: OutputPlan[], force: boolean
 }
 
 function writeOutputs(outputs: OutputPlan[], rows: RosterRow[], options: {
-  materialTitle: string;
   testResultIdentifier: string;
   testResultDatestamp?: string;
   itemIds: string[];
@@ -343,7 +330,6 @@ function writeOutputs(outputs: OutputPlan[], rows: RosterRow[], options: {
     }
     const xml = buildAssessmentResultXml({
       row,
-      materialTitle: options.materialTitle,
       testResultIdentifier: options.testResultIdentifier,
       testResultDatestamp: options.testResultDatestamp,
       itemIds: options.itemIds,
@@ -371,7 +357,7 @@ function main(): void {
     return;
   }
 
-  if (!args.roster || !args.assessmentTest || !args.materialTitle) {
+  if (!args.roster || !args.assessmentTest) {
     process.stderr.write("Missing required arguments.\n\n");
     process.stderr.write(HELP_TEXT);
     process.exit(1);
@@ -404,7 +390,6 @@ function main(): void {
 
   ensureWritable(outputDir, outputs, args.force);
   writeOutputs(outputs, rows, {
-    materialTitle: args.materialTitle,
     testResultIdentifier,
     testResultDatestamp,
     itemIds,

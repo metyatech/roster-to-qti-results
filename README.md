@@ -31,7 +31,6 @@ npm run roster-to-qti-results -- --help
 roster-to-qti-results \
   --roster roster.csv \
   --assessment-test assessment-test.qti.xml \
-  --material-title "Web Exam" \
   --test-result-identifier "WEB-EXAM-2026" \
   --test-result-datestamp 2026-01-27T10:00:00+09:00 \
   --output qti-results
@@ -41,7 +40,6 @@ roster-to-qti-results \
 
 - `--roster <path>`: roster CSV path (use `-` to read from stdin)
 - `--assessment-test <path>`: QTI assessment test XML
-- `--material-title <value>`: material title to emit in results
 
 ### Optional options
 

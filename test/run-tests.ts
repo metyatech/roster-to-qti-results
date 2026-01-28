@@ -38,8 +38,6 @@ function testBasicGeneration() {
     rosterPath,
     "--assessment-test",
     assessmentTest,
-    "--material-title",
-    "Web Exam",
     "--test-result-identifier",
     "WEB-EXAM-2026",
     "--test-result-datestamp",
@@ -58,7 +56,7 @@ function testBasicGeneration() {
   const xml = fs.readFileSync(first, "utf8");
   assert.ok(xml.includes("<context sourcedId=\"1001\""));
   assert.ok(xml.includes("sourceID=\"candidateName\" identifier=\"山田太郎\""));
-  assert.ok(xml.includes("sourceID=\"materialTitle\" identifier=\"Web Exam\""));
+  assert.ok(!xml.includes("sourceID=\"materialTitle\""), "materialTitle should not be emitted");
   assert.ok(xml.includes("<testResult identifier=\"WEB-EXAM-2026\" datestamp=\"2026-01-27T10:00:00+09:00\""));
   assert.ok(xml.includes("<itemResult identifier=\"item-001\" sequenceIndex=\"1\""));
   assert.ok(xml.includes("<itemResult identifier=\"item-002\" sequenceIndex=\"2\""));
@@ -74,8 +72,6 @@ function testDryRunJson() {
     rosterPath,
     "--assessment-test",
     assessmentTest,
-    "--material-title",
-    "Web Exam",
     "--test-result-identifier",
     "WEB-EXAM-2026",
     "--test-result-datestamp",
@@ -104,8 +100,6 @@ function testInvalidCandidateNumber() {
     rosterPath,
     "--assessment-test",
     assessmentTest,
-    "--material-title",
-    "Web Exam",
     "--test-result-identifier",
     "WEB-EXAM-2026",
     "--test-result-datestamp",
@@ -128,8 +122,6 @@ function testOptionalDatestamp() {
     rosterPath,
     "--assessment-test",
     assessmentTest,
-    "--material-title",
-    "Web Exam",
     "--output",
     outputDir,
   ]);
