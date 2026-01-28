@@ -19,7 +19,7 @@ assessmentResult
     sessionIdentifier (candidateName, materialTitle, optional candidateId/account)
   testResult (required)
     @identifier (required)
-    @datestamp (required)
+    @datestamp (optional)
   itemResult (required, 1+)
     @identifier (required)
     @sequenceIndex (required)
@@ -34,11 +34,11 @@ assessmentResult
 - `sessionIdentifier[sourceID="materialTitle"]`: `--material-title`
 - `sessionIdentifier[sourceID="candidateId"]`: `candidate_id` when provided
 - `sessionIdentifier[sourceID="candidateAccount"]`: `candidate_account` when provided
-- `testResult/@identifier`: `--test-id`
-- `testResult/@datestamp`: `--end-at` (ISO 8601 string)
+- `testResult/@identifier`: `--test-result-identifier` (default: `assessment-test`)
+- `testResult/@datestamp`: `--test-result-datestamp` (ISO 8601 string, optional)
 - `itemResult/@identifier`: assessment-test item identifier (order preserved)
 - `itemResult/@sequenceIndex`: 1-based order in assessment-test
-- `itemResult/@datestamp`: `--end-at`
+- `itemResult/@datestamp`: `--test-result-datestamp` (optional)
 
 ## Notes
 

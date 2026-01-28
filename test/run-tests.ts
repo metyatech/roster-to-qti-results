@@ -40,9 +40,9 @@ function testBasicGeneration() {
     assessmentTest,
     "--material-title",
     "Web Exam",
-    "--test-id",
+    "--test-result-identifier",
     "WEB-EXAM-2026",
-    "--end-at",
+    "--test-result-datestamp",
     endAt,
     "--output",
     outputDir,
@@ -76,9 +76,9 @@ function testDryRunJson() {
     assessmentTest,
     "--material-title",
     "Web Exam",
-    "--test-id",
+    "--test-result-identifier",
     "WEB-EXAM-2026",
-    "--end-at",
+    "--test-result-datestamp",
     "2026-01-27T10:00:00+09:00",
     "--output",
     outputDir,
@@ -106,9 +106,9 @@ function testInvalidCandidateNumber() {
     assessmentTest,
     "--material-title",
     "Web Exam",
-    "--test-id",
+    "--test-result-identifier",
     "WEB-EXAM-2026",
-    "--end-at",
+    "--test-result-datestamp",
     "2026-01-27T10:00:00+09:00",
     "--output",
     outputDir,
@@ -118,10 +118,33 @@ function testInvalidCandidateNumber() {
   assert.ok(result.stderr.includes("candidate_number must include at least one digit"));
 }
 
+function testOptionalDatestamp() {
+  const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "qti-results-"));
+  const rosterPath = path.join(FIXTURES, "roster.csv");
+  const assessmentTest = path.join(FIXTURES, "assessment-test.qti.xml");
+
+  const result = runCli([
+    "--roster",
+    rosterPath,
+    "--assessment-test",
+    assessmentTest,
+    "--material-title",
+    "Web Exam",
+    "--output",
+    outputDir,
+  ]);
+
+  assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+  const xml = fs.readFileSync(path.join(outputDir, "assessmentResult-2001.xml"), "utf8");
+  assert.ok(xml.includes("<testResult identifier=\"assessment-test\""));
+  assert.ok(!xml.includes("datestamp="), "datestamp should be omitted when not provided");
+}
+
 function run() {
   testBasicGeneration();
   testDryRunJson();
   testInvalidCandidateNumber();
+  testOptionalDatestamp();
   console.log("All tests passed.");
 }
 

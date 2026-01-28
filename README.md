@@ -32,8 +32,8 @@ roster-to-qti-results \
   --roster roster.csv \
   --assessment-test assessment-test.qti.xml \
   --material-title "Web Exam" \
-  --test-id "WEB-EXAM-2026" \
-  --end-at 2026-01-27T10:00:00+09:00 \
+  --test-result-identifier "WEB-EXAM-2026" \
+  --test-result-datestamp 2026-01-27T10:00:00+09:00 \
   --output qti-results
 ```
 
@@ -42,12 +42,14 @@ roster-to-qti-results \
 - `--roster <path>`: roster CSV path (use `-` to read from stdin)
 - `--assessment-test <path>`: QTI assessment test XML
 - `--material-title <value>`: material title to emit in results
-- `--test-id <value>`: testResult identifier
-- `--end-at <value>`: ISO 8601 datetime (or `now` for current UTC time)
 
 ### Optional options
 
 - `--output <dir>`: output directory (default: `qti-results`)
+- `--test-result-identifier <value>`: testResult identifier (default: `assessment-test`)
+- `--test-result-datestamp <value>`: ISO 8601 datetime (or `now` for current UTC time)
+- `--test-id <value>`: alias for `--test-result-identifier`
+- `--end-at <value>`: alias for `--test-result-datestamp`
 - `--dry-run`: validate and print output plan without writing files
 - `--json`: emit a machine-readable summary to stdout
 - `--force` / `--yes`: overwrite existing output files

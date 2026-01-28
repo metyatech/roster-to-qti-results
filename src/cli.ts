@@ -12,17 +12,19 @@ const HELP_TEXT = `roster-to-qti-results
 
 Usage:
   roster-to-qti-results --roster <path> --assessment-test <path> \
-    --material-title <value> --test-id <value> --end-at <value> [options]
+    --material-title <value> [options]
 
 Required options:
   --roster <path>           Roster CSV path (use '-' to read from stdin)
   --assessment-test <path>  QTI assessment test XML
   --material-title <value>  Material title for results metadata
-  --test-id <value>         testResult identifier
-  --end-at <value>          ISO 8601 datetime or 'now'
 
 Optional options:
   --output <dir>            Output directory (default: qti-results)
+  --test-result-identifier <value>  testResult identifier (default: assessment-test)
+  --test-result-datestamp <value>   ISO 8601 datetime or 'now'
+  --test-id <value>                 Alias for --test-result-identifier
+  --end-at <value>                  Alias for --test-result-datestamp
   --dry-run                 Validate and print output plan without writing files
   --json                    Emit machine-readable summary to stdout
   --force, --yes            Overwrite existing output files
@@ -36,8 +38,8 @@ type CliArgs = {
   roster: string | null;
   assessmentTest: string | null;
   materialTitle: string | null;
-  testId: string | null;
-  endAt: string | null;
+  testResultIdentifier: string | null;
+  testResultDatestamp: string | null;
   outputDir: string;
   dryRun: boolean;
   json: boolean;
@@ -66,8 +68,8 @@ function parseArgs(argv: string[]): CliArgs {
     roster: null,
     assessmentTest: null,
     materialTitle: null,
-    testId: null,
-    endAt: null,
+    testResultIdentifier: null,
+    testResultDatestamp: null,
     outputDir: "qti-results",
     dryRun: false,
     json: false,
@@ -104,12 +106,22 @@ function parseArgs(argv: string[]): CliArgs {
       continue;
     }
     if (arg === "--test-id") {
-      args.testId = argv[i + 1] ?? null;
+      args.testResultIdentifier = argv[i + 1] ?? null;
+      i += 1;
+      continue;
+    }
+    if (arg === "--test-result-identifier") {
+      args.testResultIdentifier = argv[i + 1] ?? null;
       i += 1;
       continue;
     }
     if (arg === "--end-at") {
-      args.endAt = argv[i + 1] ?? null;
+      args.testResultDatestamp = argv[i + 1] ?? null;
+      i += 1;
+      continue;
+    }
+    if (arg === "--test-result-datestamp") {
+      args.testResultDatestamp = argv[i + 1] ?? null;
       i += 1;
       continue;
     }
@@ -240,7 +252,7 @@ function resolveEndAt(raw: string): string {
   }
   const parsed = Date.parse(raw);
   if (Number.isNaN(parsed)) {
-    throw new Error("--end-at must be an ISO 8601 datetime or 'now'.");
+    throw new Error("--test-result-datestamp must be an ISO 8601 datetime or 'now'.");
   }
   return raw;
 }
@@ -257,11 +269,11 @@ function escapeXml(value: string): string {
 function buildAssessmentResultXml(options: {
   row: RosterRow;
   materialTitle: string;
-  testId: string;
-  endAt: string;
+  testResultIdentifier: string;
+  testResultDatestamp?: string;
   itemIds: string[];
 }): string {
-  const { row, materialTitle, testId, endAt, itemIds } = options;
+  const { row, materialTitle, testResultIdentifier, testResultDatestamp, itemIds } = options;
   const lines: string[] = [];
   lines.push(`<?xml version=\"1.0\" encoding=\"UTF-8\"?>`);
   lines.push(
@@ -285,13 +297,25 @@ function buildAssessmentResultXml(options: {
     `    <sessionIdentifier sourceID=\"materialTitle\" identifier=\"${escapeXml(materialTitle)}\" />`,
   );
   lines.push("  </context>");
-  lines.push(
-    `  <testResult identifier=\"${escapeXml(testId)}\" datestamp=\"${escapeXml(endAt)}\" />`,
-  );
-  itemIds.forEach((itemId, index) => {
+  if (testResultDatestamp) {
     lines.push(
-      `  <itemResult identifier=\"${escapeXml(itemId)}\" sequenceIndex=\"${index + 1}\" datestamp=\"${escapeXml(endAt)}\" sessionStatus=\"final\" />`,
+      `  <testResult identifier=\"${escapeXml(testResultIdentifier)}\" datestamp=\"${escapeXml(testResultDatestamp)}\" />`,
     );
+  } else {
+    lines.push(
+      `  <testResult identifier=\"${escapeXml(testResultIdentifier)}\" />`,
+    );
+  }
+  itemIds.forEach((itemId, index) => {
+    if (testResultDatestamp) {
+      lines.push(
+        `  <itemResult identifier=\"${escapeXml(itemId)}\" sequenceIndex=\"${index + 1}\" datestamp=\"${escapeXml(testResultDatestamp)}\" sessionStatus=\"final\" />`,
+      );
+    } else {
+      lines.push(
+        `  <itemResult identifier=\"${escapeXml(itemId)}\" sequenceIndex=\"${index + 1}\" sessionStatus=\"final\" />`,
+      );
+    }
   });
   lines.push(`</assessmentResult>`);
   return `${lines.join("\n")}\n`;
@@ -319,8 +343,8 @@ function ensureWritable(outputDir: string, outputs: OutputPlan[], force: boolean
 
 function writeOutputs(outputs: OutputPlan[], rows: RosterRow[], options: {
   materialTitle: string;
-  testId: string;
-  endAt: string;
+  testResultIdentifier: string;
+  testResultDatestamp?: string;
   itemIds: string[];
 }): void {
   const rowByResult = new Map(rows.map((row) => [row.resultId, row]));
@@ -332,8 +356,8 @@ function writeOutputs(outputs: OutputPlan[], rows: RosterRow[], options: {
     const xml = buildAssessmentResultXml({
       row,
       materialTitle: options.materialTitle,
-      testId: options.testId,
-      endAt: options.endAt,
+      testResultIdentifier: options.testResultIdentifier,
+      testResultDatestamp: options.testResultDatestamp,
       itemIds: options.itemIds,
     });
     fs.writeFileSync(output.path, xml, "utf8");
@@ -359,7 +383,7 @@ function main(): void {
     return;
   }
 
-  if (!args.roster || !args.assessmentTest || !args.materialTitle || !args.testId || !args.endAt) {
+  if (!args.roster || !args.assessmentTest || !args.materialTitle) {
     process.stderr.write("Missing required arguments.\n\n");
     process.stderr.write(HELP_TEXT);
     process.exit(1);
@@ -369,7 +393,10 @@ function main(): void {
     throw new Error("--output must be a non-empty path.");
   }
 
-  const endAt = resolveEndAt(args.endAt);
+  const testResultIdentifier = args.testResultIdentifier || "assessment-test";
+  const testResultDatestamp = args.testResultDatestamp
+    ? resolveEndAt(args.testResultDatestamp)
+    : undefined;
   const outputDir = path.resolve(args.outputDir);
 
   const rows = readRosterCsv(args.roster);
@@ -390,8 +417,8 @@ function main(): void {
   ensureWritable(outputDir, outputs, args.force);
   writeOutputs(outputs, rows, {
     materialTitle: args.materialTitle,
-    testId: args.testId,
-    endAt,
+    testResultIdentifier,
+    testResultDatestamp,
     itemIds,
   });
 
