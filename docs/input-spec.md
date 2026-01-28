@@ -2,6 +2,7 @@
 
 ## Overview
 - Encoding: UTF-8
+- UTF-8 BOM: allowed
 - Delimiter: comma (,)
 - Header row: required
 - Line endings: CRLF or LF

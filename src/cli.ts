@@ -149,6 +149,7 @@ function readRosterCsv(rosterPath: string): RosterRow[] {
   const csvText = rosterPath === "-" ? fs.readFileSync(0, "utf8") : fs.readFileSync(rosterPath, "utf8");
   const records = parseCsv(csvText, {
     columns: true,
+    bom: true,
     skip_empty_lines: true,
     trim: true,
   }) as Array<Record<string, string>>;

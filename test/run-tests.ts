@@ -112,6 +112,27 @@ function testInvalidCandidateNumber() {
   assert.ok(result.stderr.includes("candidate_number must include at least one digit"));
 }
 
+function testBomRoster() {
+  const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "qti-results-"));
+  const rosterPath = path.join(FIXTURES, "roster-bom.csv");
+  const assessmentTest = path.join(FIXTURES, "assessment-test.qti.xml");
+
+  const result = runCli([
+    "--roster",
+    rosterPath,
+    "--assessment-test",
+    assessmentTest,
+    "--output",
+    outputDir,
+  ]);
+
+  assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+  const first = path.join(outputDir, "assessmentResult-1001.xml");
+  const second = path.join(outputDir, "assessmentResult-1002.xml");
+  assert.ok(fs.existsSync(first), "expected first output XML");
+  assert.ok(fs.existsSync(second), "expected second output XML");
+}
+
 function testOptionalDatestamp() {
   const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "qti-results-"));
   const rosterPath = path.join(FIXTURES, "roster.csv");
@@ -136,6 +157,7 @@ function run() {
   testBasicGeneration();
   testDryRunJson();
   testInvalidCandidateNumber();
+  testBomRoster();
   testOptionalDatestamp();
   console.log("All tests passed.");
 }
