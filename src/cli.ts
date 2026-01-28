@@ -23,8 +23,6 @@ Optional options:
   --output <dir>            Output directory (default: qti-results)
   --test-result-identifier <value>  testResult identifier (default: assessment-test)
   --test-result-datestamp <value>   ISO 8601 datetime or 'now'
-  --test-id <value>                 Alias for --test-result-identifier
-  --end-at <value>                  Alias for --test-result-datestamp
   --dry-run                 Validate and print output plan without writing files
   --json                    Emit machine-readable summary to stdout
   --force, --yes            Overwrite existing output files
@@ -105,18 +103,8 @@ function parseArgs(argv: string[]): CliArgs {
       i += 1;
       continue;
     }
-    if (arg === "--test-id") {
-      args.testResultIdentifier = argv[i + 1] ?? null;
-      i += 1;
-      continue;
-    }
     if (arg === "--test-result-identifier") {
       args.testResultIdentifier = argv[i + 1] ?? null;
-      i += 1;
-      continue;
-    }
-    if (arg === "--end-at") {
-      args.testResultDatestamp = argv[i + 1] ?? null;
       i += 1;
       continue;
     }

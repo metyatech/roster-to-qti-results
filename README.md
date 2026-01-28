@@ -48,8 +48,6 @@ roster-to-qti-results \
 - `--output <dir>`: output directory (default: `qti-results`)
 - `--test-result-identifier <value>`: testResult identifier (default: `assessment-test`)
 - `--test-result-datestamp <value>`: ISO 8601 datetime (or `now` for current UTC time)
-- `--test-id <value>`: alias for `--test-result-identifier`
-- `--end-at <value>`: alias for `--test-result-datestamp`
 - `--dry-run`: validate and print output plan without writing files
 - `--json`: emit a machine-readable summary to stdout
 - `--force` / `--yes`: overwrite existing output files
