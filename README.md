@@ -43,7 +43,7 @@ roster-to-qti-results \
 
 ### Optional options
 
-- `--output <dir>`: output directory (default: `qti-results`)
+- `--output <dir>`: output directory (default: `<roster-dir>/qti-results`)
 - `--test-result-identifier <value>`: testResult identifier (default: `assessment-test`)
 - `--test-result-datestamp <value>`: ISO 8601 datetime (or `now` for current UTC time)
 - `--dry-run`: validate and print output plan without writing files

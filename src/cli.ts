@@ -19,7 +19,7 @@ Required options:
   --assessment-test <path>  QTI assessment test XML
 
 Optional options:
-  --output <dir>            Output directory (default: qti-results)
+  --output <dir>            Output directory (default: <roster-dir>/qti-results)
   --test-result-identifier <value>  testResult identifier (default: assessment-test)
   --test-result-datestamp <value>   ISO 8601 datetime or 'now'
   --dry-run                 Validate and print output plan without writing files
@@ -36,7 +36,7 @@ type CliArgs = {
   assessmentTest: string | null;
   testResultIdentifier: string | null;
   testResultDatestamp: string | null;
-  outputDir: string;
+  outputDir: string | null;
   dryRun: boolean;
   json: boolean;
   force: boolean;
@@ -65,7 +65,7 @@ function parseArgs(argv: string[]): CliArgs {
     assessmentTest: null,
     testResultIdentifier: null,
     testResultDatestamp: null,
-    outputDir: "qti-results",
+    outputDir: null,
     dryRun: false,
     json: false,
     force: false,
@@ -143,6 +143,13 @@ function readPackageVersion(): string {
   const raw = fs.readFileSync(pkgPath, "utf8");
   const pkg = JSON.parse(raw) as { version?: string };
   return pkg.version ?? "0.0.0";
+}
+
+function resolveDefaultOutputDir(rosterPath: string): string {
+  if (rosterPath === "-") {
+    return path.resolve("qti-results");
+  }
+  return path.join(path.dirname(path.resolve(rosterPath)), "qti-results");
 }
 
 function readRosterCsv(rosterPath: string): RosterRow[] {
@@ -364,7 +371,7 @@ function main(): void {
     process.exit(1);
   }
 
-  if (!args.outputDir) {
+  if (args.outputDir !== null && !args.outputDir) {
     throw new Error("--output must be a non-empty path.");
   }
 
@@ -372,7 +379,9 @@ function main(): void {
   const testResultDatestamp = args.testResultDatestamp
     ? resolveEndAt(args.testResultDatestamp)
     : undefined;
-  const outputDir = path.resolve(args.outputDir);
+  const outputDir = args.outputDir
+    ? path.resolve(args.outputDir)
+    : resolveDefaultOutputDir(args.roster);
 
   const rows = readRosterCsv(args.roster);
   const itemIds = readAssessmentTestItemIds(args.assessmentTest);
