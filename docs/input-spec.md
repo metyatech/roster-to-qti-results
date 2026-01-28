@@ -8,18 +8,18 @@
 
 ## Required columns
 
-| Column            | Type   | Description |
-| ----------------- | ------ | ----------- |
-| candidate_number  | string | Candidate number used for `context/@sourcedId` (must contain at least one digit). |
-| candidate_name    | string | Candidate display name used for `candidateName` session identifier. |
+| Column           | Type   | Description                                                                       |
+| ---------------- | ------ | --------------------------------------------------------------------------------- |
+| candidate_number | string | Candidate number used for `context/@sourcedId` (must contain at least one digit). |
+| candidate_name   | string | Candidate display name used for `candidateName` session identifier.               |
 
 ## Optional columns
 
-| Column            | Type   | Description |
-| ----------------- | ------ | ----------- |
+| Column            | Type   | Description                                                                  |
+| ----------------- | ------ | ---------------------------------------------------------------------------- |
 | candidate_account | string | Optional account identifier stored in `candidateAccount` session identifier. |
-| candidate_id      | string | Optional candidate identifier stored in `candidateId` session identifier. |
-| result_id         | string | Output filename identifier. Defaults to `candidate_number` when omitted. |
+| candidate_id      | string | Optional candidate identifier stored in `candidateId` session identifier.    |
+| result_id         | string | Output filename identifier. Defaults to `candidate_number` when omitted.     |
 
 ## Validation rules
 
