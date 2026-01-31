@@ -4,5 +4,8 @@
     "cli",
     "node"
   ],
+  "extra": [
+    "../agent-rules-local/ghws-workspace.md"
+  ],
   "output": "AGENTS.md"
 }
