@@ -1,8 +1,8 @@
 {
   "source": "github:metyatech/agent-rules",
   "domains": [
+    "cli",
     "node"
   ],
-  "extra": [],
   "output": "AGENTS.md"
 }
