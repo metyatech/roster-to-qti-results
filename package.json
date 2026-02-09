@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build",
     "test": "tsx test/run-tests.ts",
     "roster-to-qti-results": "tsx src/cli.ts"
   },
