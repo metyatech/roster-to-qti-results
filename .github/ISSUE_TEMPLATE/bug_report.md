@@ -1,9 +1,9 @@
 ---
 name: Bug report
 about: Report a problem with roster-to-qti-results
-title: "[Bug] "
+title: '[Bug] '
 labels: bug
-assignees: ""
+assignees: ''
 ---
 
 ## Summary
@@ -15,6 +15,7 @@ assignees: ""
 ## Actual behavior
 
 ## Environment
+
 - OS:
 - Node version:
 - roster-to-qti-results version:

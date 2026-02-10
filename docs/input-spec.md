@@ -1,6 +1,7 @@
 # Roster CSV Input Specification
 
 ## Overview
+
 - Encoding: UTF-8
 - UTF-8 BOM: allowed
 - Delimiter: comma (,)

@@ -4,13 +4,24 @@
   "type": "module",
   "version": "0.1.0",
   "description": "Generate QTI 3.0 Results Reporting XML from roster CSV files.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metyatech/roster-to-qti-results.git"
+  },
+  "bugs": {
+    "url": "https://github.com/metyatech/roster-to-qti-results/issues"
+  },
+  "homepage": "https://github.com/metyatech/roster-to-qti-results#readme",
   "bin": {
     "roster-to-qti-results": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
-    "lint": "tsc --noEmit",
+    "lint": "eslint . && tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "tsx test/run-tests.ts",
+    "verify": "npm run format:check && npm run lint && npm run build && npm test",
     "roster-to-qti-results": "tsx src/cli.ts"
   },
   "dependencies": {
@@ -18,7 +29,13 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
+    "@typescript-eslint/eslint-plugin": "^8.55.0",
+    "@typescript-eslint/parser": "^8.55.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
     "tsx": "^4.7.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.55.0"
   }
 }

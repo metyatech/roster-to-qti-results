@@ -19,6 +19,8 @@ npm install
 ## Development commands
 
 ```sh
+npm run verify
+npm run format
 npm run lint
 npm test
 npm run build
@@ -62,6 +64,13 @@ See `docs/input-spec.md` for the full specification.
 
 See `docs/output-spec.md` for the QTI Results Reporting structure.
 
+## Links
+
+- [SECURITY.md](SECURITY.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [LICENSE](LICENSE)
+- [CHANGELOG.md](CHANGELOG.md)
+
 ## Environment variables
 
 None.
@@ -70,7 +79,7 @@ None.
 
 1. Update `CHANGELOG.md` with the new version notes.
 2. Bump the version in `package.json`.
-3. Run `npm run lint` and `npm test`.
+3. Run `npm run verify`.
 4. Create a Git tag `vX.Y.Z` and push it.
 5. Create a GitHub Release from the corresponding changelog section.
 
