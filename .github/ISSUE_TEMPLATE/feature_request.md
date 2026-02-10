@@ -1,9 +1,9 @@
 ---
 name: Feature request
 about: Suggest an idea for roster-to-qti-results
-title: "[Feature] "
+title: '[Feature] '
 labels: enhancement
-assignees: ""
+assignees: ''
 ---
 
 ## Summary

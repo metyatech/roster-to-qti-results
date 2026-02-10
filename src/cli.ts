@@ -1,11 +1,11 @@
-import fs from "node:fs";
-import path from "node:path";
-import process from "node:process";
-import { fileURLToPath } from "node:url";
-import { parse as parseCsv } from "csv-parse/sync";
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
+import { fileURLToPath } from 'node:url';
+import { parse as parseCsv } from 'csv-parse/sync';
 
-const RESULTS_NAMESPACE = "http://www.imsglobal.org/xsd/imsqti_result_v3p0";
-const XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
+const RESULTS_NAMESPACE = 'http://www.imsglobal.org/xsd/imsqti_result_v3p0';
+const XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance';
 const SCHEMA_LOCATION = `${RESULTS_NAMESPACE} ${RESULTS_NAMESPACE}.xsd`;
 
 const HELP_TEXT = `roster-to-qti-results
@@ -77,56 +77,56 @@ function parseArgs(argv: string[]): CliArgs {
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
-    if (arg === "--help" || arg === "-h") {
+    if (arg === '--help' || arg === '-h') {
       args.help = true;
       continue;
     }
-    if (arg === "--version" || arg === "-V") {
+    if (arg === '--version' || arg === '-V') {
       args.version = true;
       continue;
     }
-    if (arg === "--roster") {
+    if (arg === '--roster') {
       args.roster = argv[i + 1] ?? null;
       i += 1;
       continue;
     }
-    if (arg === "--assessment-test") {
+    if (arg === '--assessment-test') {
       args.assessmentTest = argv[i + 1] ?? null;
       i += 1;
       continue;
     }
-    if (arg === "--test-result-identifier") {
+    if (arg === '--test-result-identifier') {
       args.testResultIdentifier = argv[i + 1] ?? null;
       i += 1;
       continue;
     }
-    if (arg === "--test-result-datestamp") {
+    if (arg === '--test-result-datestamp') {
       args.testResultDatestamp = argv[i + 1] ?? null;
       i += 1;
       continue;
     }
-    if (arg === "--output") {
-      args.outputDir = argv[i + 1] ?? "";
+    if (arg === '--output') {
+      args.outputDir = argv[i + 1] ?? '';
       i += 1;
       continue;
     }
-    if (arg === "--dry-run") {
+    if (arg === '--dry-run') {
       args.dryRun = true;
       continue;
     }
-    if (arg === "--json") {
+    if (arg === '--json') {
       args.json = true;
       continue;
     }
-    if (arg === "--force" || arg === "--yes") {
+    if (arg === '--force' || arg === '--yes') {
       args.force = true;
       continue;
     }
-    if (arg === "--quiet") {
+    if (arg === '--quiet') {
       args.quiet = true;
       continue;
     }
-    if (arg === "--verbose") {
+    if (arg === '--verbose') {
       args.verbose = true;
       continue;
     }
@@ -138,22 +138,23 @@ function parseArgs(argv: string[]): CliArgs {
 }
 
 function readPackageVersion(): string {
-  const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-  const pkgPath = path.join(rootDir, "package.json");
-  const raw = fs.readFileSync(pkgPath, "utf8");
+  const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+  const pkgPath = path.join(rootDir, 'package.json');
+  const raw = fs.readFileSync(pkgPath, 'utf8');
   const pkg = JSON.parse(raw) as { version?: string };
-  return pkg.version ?? "0.0.0";
+  return pkg.version ?? '0.0.0';
 }
 
 function resolveDefaultOutputDir(rosterPath: string): string {
-  if (rosterPath === "-") {
-    return path.resolve("qti-results");
+  if (rosterPath === '-') {
+    return path.resolve('qti-results');
   }
-  return path.join(path.dirname(path.resolve(rosterPath)), "qti-results");
+  return path.join(path.dirname(path.resolve(rosterPath)), 'qti-results');
 }
 
 function readRosterCsv(rosterPath: string): RosterRow[] {
-  const csvText = rosterPath === "-" ? fs.readFileSync(0, "utf8") : fs.readFileSync(rosterPath, "utf8");
+  const csvText =
+    rosterPath === '-' ? fs.readFileSync(0, 'utf8') : fs.readFileSync(rosterPath, 'utf8');
   const records = parseCsv(csvText, {
     columns: true,
     bom: true,
@@ -162,24 +163,24 @@ function readRosterCsv(rosterPath: string): RosterRow[] {
   }) as Array<Record<string, string>>;
 
   if (!records.length) {
-    throw new Error("Roster CSV is empty.");
+    throw new Error('Roster CSV is empty.');
   }
 
   const rows: RosterRow[] = [];
   const seen = new Set<string>();
 
   records.forEach((record, index) => {
-    const candidateNumber = record["candidate_number"]?.trim();
-    const candidateName = record["candidate_name"]?.trim();
-    const candidateAccount = record["candidate_account"]?.trim();
-    const candidateId = record["candidate_id"]?.trim();
-    const resultIdRaw = record["result_id"]?.trim();
+    const candidateNumber = record['candidate_number']?.trim();
+    const candidateName = record['candidate_name']?.trim();
+    const candidateAccount = record['candidate_account']?.trim();
+    const candidateId = record['candidate_id']?.trim();
+    const resultIdRaw = record['result_id']?.trim();
 
     if (!candidateNumber) {
       throw new Error(`Missing candidate_number at row ${index + 2}.`);
     }
     if (!/\d/.test(candidateNumber)) {
-      throw new Error("candidate_number must include at least one digit");
+      throw new Error('candidate_number must include at least one digit');
     }
     if (!candidateName) {
       throw new Error(`Missing candidate_name at row ${index + 2}.`);
@@ -207,7 +208,7 @@ function readRosterCsv(rosterPath: string): RosterRow[] {
 }
 
 function readAssessmentTestItemIds(assessmentTestPath: string): string[] {
-  const xml = fs.readFileSync(assessmentTestPath, "utf8");
+  const xml = fs.readFileSync(assessmentTestPath, 'utf8');
   const pattern = /<qti-assessment-item-ref\b[^>]*\bidentifier\s*=\s*(["'])([^"']+)\1[^>]*\/?\s*>/g;
   const itemIds: string[] = [];
   let match = pattern.exec(xml);
@@ -217,13 +218,13 @@ function readAssessmentTestItemIds(assessmentTestPath: string): string[] {
   }
 
   if (itemIds.length === 0) {
-    throw new Error("No assessment item refs found in assessment test.");
+    throw new Error('No assessment item refs found in assessment test.');
   }
 
   const seen = new Set<string>();
   for (const itemId of itemIds) {
     if (!itemId) {
-      throw new Error("Assessment test item identifier is empty.");
+      throw new Error('Assessment test item identifier is empty.');
     }
     if (seen.has(itemId)) {
       throw new Error(`Duplicate assessment test item identifier: ${itemId}`);
@@ -235,7 +236,7 @@ function readAssessmentTestItemIds(assessmentTestPath: string): string[] {
 }
 
 function resolveEndAt(raw: string): string {
-  if (raw === "now") {
+  if (raw === 'now') {
     return new Date().toISOString();
   }
   const parsed = Date.parse(raw);
@@ -247,11 +248,11 @@ function resolveEndAt(raw: string): string {
 
 function escapeXml(value: string): string {
   return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
-    .replace(/'/g, "&apos;");
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
 function buildAssessmentResultXml(options: {
@@ -262,47 +263,45 @@ function buildAssessmentResultXml(options: {
 }): string {
   const { row, testResultIdentifier, testResultDatestamp, itemIds } = options;
   const lines: string[] = [];
-  lines.push(`<?xml version=\"1.0\" encoding=\"UTF-8\"?>`);
+  lines.push(`<?xml version="1.0" encoding="UTF-8"?>`);
   lines.push(
-    `<assessmentResult xmlns=\"${RESULTS_NAMESPACE}\" xmlns:xsi=\"${XSI_NAMESPACE}\" xsi:schemaLocation=\"${SCHEMA_LOCATION}\">`,
+    `<assessmentResult xmlns="${RESULTS_NAMESPACE}" xmlns:xsi="${XSI_NAMESPACE}" xsi:schemaLocation="${SCHEMA_LOCATION}">`,
   );
-  lines.push(`  <context sourcedId=\"${escapeXml(row.candidateNumber)}\">`);
+  lines.push(`  <context sourcedId="${escapeXml(row.candidateNumber)}">`);
   lines.push(
-    `    <sessionIdentifier sourceID=\"candidateName\" identifier=\"${escapeXml(row.candidateName)}\" />`,
+    `    <sessionIdentifier sourceID="candidateName" identifier="${escapeXml(row.candidateName)}" />`,
   );
   if (row.candidateId) {
     lines.push(
-      `    <sessionIdentifier sourceID=\"candidateId\" identifier=\"${escapeXml(row.candidateId)}\" />`,
+      `    <sessionIdentifier sourceID="candidateId" identifier="${escapeXml(row.candidateId)}" />`,
     );
   }
   if (row.candidateAccount) {
     lines.push(
-      `    <sessionIdentifier sourceID=\"candidateAccount\" identifier=\"${escapeXml(row.candidateAccount)}\" />`,
+      `    <sessionIdentifier sourceID="candidateAccount" identifier="${escapeXml(row.candidateAccount)}" />`,
     );
   }
-  lines.push("  </context>");
+  lines.push('  </context>');
   if (testResultDatestamp) {
     lines.push(
-      `  <testResult identifier=\"${escapeXml(testResultIdentifier)}\" datestamp=\"${escapeXml(testResultDatestamp)}\" />`,
+      `  <testResult identifier="${escapeXml(testResultIdentifier)}" datestamp="${escapeXml(testResultDatestamp)}" />`,
     );
   } else {
-    lines.push(
-      `  <testResult identifier=\"${escapeXml(testResultIdentifier)}\" />`,
-    );
+    lines.push(`  <testResult identifier="${escapeXml(testResultIdentifier)}" />`);
   }
   itemIds.forEach((itemId, index) => {
     if (testResultDatestamp) {
       lines.push(
-        `  <itemResult identifier=\"${escapeXml(itemId)}\" sequenceIndex=\"${index + 1}\" datestamp=\"${escapeXml(testResultDatestamp)}\" sessionStatus=\"final\" />`,
+        `  <itemResult identifier="${escapeXml(itemId)}" sequenceIndex="${index + 1}" datestamp="${escapeXml(testResultDatestamp)}" sessionStatus="final" />`,
       );
     } else {
       lines.push(
-        `  <itemResult identifier=\"${escapeXml(itemId)}\" sequenceIndex=\"${index + 1}\" sessionStatus=\"final\" />`,
+        `  <itemResult identifier="${escapeXml(itemId)}" sequenceIndex="${index + 1}" sessionStatus="final" />`,
       );
     }
   });
   lines.push(`</assessmentResult>`);
-  return `${lines.join("\n")}\n`;
+  return `${lines.join('\n')}\n`;
 }
 
 function buildOutputPlan(outputDir: string, rows: RosterRow[]): OutputPlan[] {
@@ -325,11 +324,15 @@ function ensureWritable(outputDir: string, outputs: OutputPlan[], force: boolean
   }
 }
 
-function writeOutputs(outputs: OutputPlan[], rows: RosterRow[], options: {
-  testResultIdentifier: string;
-  testResultDatestamp?: string;
-  itemIds: string[];
-}): void {
+function writeOutputs(
+  outputs: OutputPlan[],
+  rows: RosterRow[],
+  options: {
+    testResultIdentifier: string;
+    testResultDatestamp?: string;
+    itemIds: string[];
+  },
+): void {
   const rowByResult = new Map(rows.map((row) => [row.resultId, row]));
   outputs.forEach((output) => {
     const row = rowByResult.get(output.resultId);
@@ -342,7 +345,7 @@ function writeOutputs(outputs: OutputPlan[], rows: RosterRow[], options: {
       testResultDatestamp: options.testResultDatestamp,
       itemIds: options.itemIds,
     });
-    fs.writeFileSync(output.path, xml, "utf8");
+    fs.writeFileSync(output.path, xml, 'utf8');
   });
 }
 
@@ -366,16 +369,16 @@ function main(): void {
   }
 
   if (!args.roster || !args.assessmentTest) {
-    process.stderr.write("Missing required arguments.\n\n");
+    process.stderr.write('Missing required arguments.\n\n');
     process.stderr.write(HELP_TEXT);
     process.exit(1);
   }
 
   if (args.outputDir !== null && !args.outputDir) {
-    throw new Error("--output must be a non-empty path.");
+    throw new Error('--output must be a non-empty path.');
   }
 
-  const testResultIdentifier = args.testResultIdentifier || "assessment-test";
+  const testResultIdentifier = args.testResultIdentifier || 'assessment-test';
   const testResultDatestamp = args.testResultDatestamp
     ? resolveEndAt(args.testResultDatestamp)
     : undefined;
@@ -389,9 +392,7 @@ function main(): void {
 
   if (args.dryRun) {
     if (args.json) {
-      process.stdout.write(
-        `${JSON.stringify({ mode: "dry-run", outputDir, outputs }, null, 2)}\n`,
-      );
+      process.stdout.write(`${JSON.stringify({ mode: 'dry-run', outputDir, outputs }, null, 2)}\n`);
     } else {
       logInfo(`Dry run: ${outputs.length} file(s) would be written to ${outputDir}`, args);
     }
@@ -406,9 +407,7 @@ function main(): void {
   });
 
   if (args.json) {
-    process.stdout.write(
-      `${JSON.stringify({ mode: "write", outputDir, outputs }, null, 2)}\n`,
-    );
+    process.stdout.write(`${JSON.stringify({ mode: 'write', outputDir, outputs }, null, 2)}\n`);
   } else if (args.verbose) {
     logInfo(`Wrote ${outputs.length} file(s) to ${outputDir}`, args);
   }
