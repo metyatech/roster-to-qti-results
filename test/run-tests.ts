@@ -9,10 +9,7 @@ const FIXTURES = path.join(ROOT, "test", "fixtures");
 const CLI_PATH = path.join(ROOT, "src", "cli.ts");
 const TSX_CLI = path.join(ROOT, "node_modules", "tsx", "dist", "cli.mjs");
 
-function runCli(
-  args: string[],
-  options?: { input?: string; cwd?: string },
-) {
+function runCli(args: string[], options?: { input?: string; cwd?: string }) {
   const result = spawnSync(process.execPath, [TSX_CLI, CLI_PATH, ...args], {
     encoding: "utf8",
     input: options?.input,
@@ -58,12 +55,14 @@ function testBasicGeneration() {
   assert.ok(fs.existsSync(second), "expected second output XML");
 
   const xml = fs.readFileSync(first, "utf8");
-  assert.ok(xml.includes("<context sourcedId=\"1001\""));
-  assert.ok(xml.includes("sourceID=\"candidateName\" identifier=\"山田太郎\""));
-  assert.ok(!xml.includes("sourceID=\"materialTitle\""), "materialTitle should not be emitted");
-  assert.ok(xml.includes("<testResult identifier=\"WEB-EXAM-2026\" datestamp=\"2026-01-27T10:00:00+09:00\""));
-  assert.ok(xml.includes("<itemResult identifier=\"item-001\" sequenceIndex=\"1\""));
-  assert.ok(xml.includes("<itemResult identifier=\"item-002\" sequenceIndex=\"2\""));
+  assert.ok(xml.includes('<context sourcedId="1001"'));
+  assert.ok(xml.includes('sourceID="candidateName" identifier="山田太郎"'));
+  assert.ok(!xml.includes('sourceID="materialTitle"'), "materialTitle should not be emitted");
+  assert.ok(
+    xml.includes('<testResult identifier="WEB-EXAM-2026" datestamp="2026-01-27T10:00:00+09:00"'),
+  );
+  assert.ok(xml.includes('<itemResult identifier="item-001" sequenceIndex="1"'));
+  assert.ok(xml.includes('<itemResult identifier="item-002" sequenceIndex="2"'));
 }
 
 function testDryRunJson() {
@@ -126,15 +125,9 @@ function testDefaultOutputDirFromRoster() {
   fs.copyFileSync(path.join(FIXTURES, "assessment-test.qti.xml"), assessmentTest);
 
   try {
-    const result = runCli(
-      [
-        "--roster",
-        rosterPath,
-        "--assessment-test",
-        assessmentTest,
-      ],
-      { cwd: workDir },
-    );
+    const result = runCli(["--roster", rosterPath, "--assessment-test", assessmentTest], {
+      cwd: workDir,
+    });
 
     assert.strictEqual(result.status, 0, result.stderr || result.stdout);
     const outputDir = path.join(rosterDir, "qti-results");
@@ -183,7 +176,7 @@ function testOptionalDatestamp() {
 
   assert.strictEqual(result.status, 0, result.stderr || result.stdout);
   const xml = fs.readFileSync(path.join(outputDir, "assessmentResult-2001.xml"), "utf8");
-  assert.ok(xml.includes("<testResult identifier=\"assessment-test\""));
+  assert.ok(xml.includes('<testResult identifier="assessment-test"'));
   assert.ok(!xml.includes("datestamp="), "datestamp should be omitted when not provided");
 }
 
