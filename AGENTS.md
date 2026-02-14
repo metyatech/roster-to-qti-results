@@ -101,10 +101,12 @@ Source: github:metyatech/agent-rules@HEAD/rules/global/command-execution.md
 - Keep changes scoped to affected repositories; when shared modules change, update consumers and verify at least one.
 - If no branch is specified, work on the current branch; direct commits to main/master are allowed.
 - After addressing PR review feedback, resolve the corresponding review thread(s) before concluding; if you lack permission, state it explicitly.
-- After pushing fixes for PR review feedback, always re-request review from the same reviewer(s) when possible; if there are no current reviewers, ask who should review.
-- When Codex and/or Copilot review bots are configured for the repo, always trigger a re-review after pushing fixes.
-- For Codex re-review: comment `@codex review` on the PR.
-- For Copilot re-review: use `gh api` to remove+re-request the bot reviewer `copilot-pull-request-reviewer[bot]` (do not rely on `gh pr edit --add-reviewer Copilot`).
+- After pushing fixes for PR review feedback, re-request review only from reviewer(s) who posted the addressed feedback in the current round.
+- Do not re-request review from reviewers (including AI reviewers) who did not post addressed feedback, or who already indicated no actionable issues.
+- If no applicable reviewer remains, ask who should review next.
+- When Codex and/or Copilot review bots are configured for the repo, trigger re-review only for the bot(s) that posted addressed feedback.
+- For Codex re-review (only when applicable): comment `@codex review` on the PR.
+- For Copilot re-review (only when applicable): use `gh api` to remove+re-request the bot reviewer `copilot-pull-request-reviewer[bot]` (do not rely on `gh pr edit --add-reviewer Copilot`).
   - Remove: `gh api --method DELETE /repos/{owner}/{repo}/pulls/{pr}/requested_reviewers -f "reviewers[]=copilot-pull-request-reviewer[bot]"`
   - Add: `gh api --method POST /repos/{owner}/{repo}/pulls/{pr}/requested_reviewers -f "reviewers[]=copilot-pull-request-reviewer[bot]"`
 - After completing a PR, merge it, sync the target branch, and delete the PR branch locally and remotely.
@@ -148,6 +150,17 @@ Source: github:metyatech/agent-rules@HEAD/rules/global/linting-formatting-and-st
 - Treat warnings as errors in CI; when a tool cannot, use its strictest available setting so warnings fail CI.
 - Do not disable rules globally; keep suppressions narrow, justified, and time-bounded.
 - Pin tool versions (lockfiles/manifests) for reproducible CI.
+
+## Design and visual accessibility automation
+
+- For any design/UI styling change in any project, enforce automated visual accessibility checks as part of the repo-standard `verify` command and CI.
+- Do not rely on per-page/manual test maintenance; use route discovery (for example sitemap, generated route lists, or framework route manifests) so newly added pages are automatically included.
+- Validate both light and dark themes when theme switching is supported.
+- Validate at least default, hover, and focus states for interactive elements.
+- Enforce non-text boundary contrast checks across all visible UI elements that present boundaries (including interactive controls and container-like elements), not only predefined component classes.
+- Do not hardcode a narrow selector allowlist for boundary checks; use broad DOM discovery with only minimal technical exclusions (for example hidden/zero-size/non-rendered nodes).
+- Fail CI on violations; do not silently ignore design regressions.
+- If temporary exclusions are unavoidable, keep them narrowly scoped, documented with rationale, and remove them promptly.
 
 ## Security baseline
 
