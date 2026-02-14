@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run build",
+    "format:check": "prettier --check .",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build",
     "test": "tsx test/run-tests.ts",
     "roster-to-qti-results": "tsx src/cli.ts"
   },
@@ -21,8 +22,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
-    "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "@typescript-eslint/parser": "^8.54.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
