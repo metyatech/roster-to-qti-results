@@ -9,7 +9,11 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build",
     "test": "tsx test/run-tests.ts",
     "roster-to-qti-results": "tsx src/cli.ts"
   },
@@ -18,7 +22,11 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
     "tsx": "^4.7.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.54.0"
   }
 }

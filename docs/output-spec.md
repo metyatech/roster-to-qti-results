@@ -1,11 +1,13 @@
 # QTI Results Output Specification
 
 ## Overview
+
 - Output format: QTI 3.0 Results Reporting XML (`assessmentResult`).
 - One output file per roster entry.
 - File naming: `assessmentResult-<resultId>.xml`.
 
 ## Namespaces
+
 - Default namespace: `http://www.imsglobal.org/xsd/imsqti_result_v3p0`
 - XML Schema instance namespace: `http://www.w3.org/2001/XMLSchema-instance`
 - Schema location: `http://www.imsglobal.org/xsd/imsqti_result_v3p0 http://www.imsglobal.org/xsd/imsqti_result_v3p0.xsd`

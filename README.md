@@ -19,7 +19,9 @@ npm install
 ## Development commands
 
 ```sh
-npm run lint
+npm run verify  # Run lint, format check, typecheck, test, and build
+npm run lint    # Run ESLint
+npm run format  # Run Prettier
 npm test
 npm run build
 npm run roster-to-qti-results -- --help
@@ -70,7 +72,7 @@ None.
 
 1. Update `CHANGELOG.md` with the new version notes.
 2. Bump the version in `package.json`.
-3. Run `npm run lint` and `npm test`.
+3. Run `npm run verify`.
 4. Create a Git tag `vX.Y.Z` and push it.
 5. Create a GitHub Release from the corresponding changelog section.
 

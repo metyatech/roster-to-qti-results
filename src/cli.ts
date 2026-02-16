@@ -153,7 +153,8 @@ function resolveDefaultOutputDir(rosterPath: string): string {
 }
 
 function readRosterCsv(rosterPath: string): RosterRow[] {
-  const csvText = rosterPath === "-" ? fs.readFileSync(0, "utf8") : fs.readFileSync(rosterPath, "utf8");
+  const csvText =
+    rosterPath === "-" ? fs.readFileSync(0, "utf8") : fs.readFileSync(rosterPath, "utf8");
   const records = parseCsv(csvText, {
     columns: true,
     bom: true,
@@ -250,7 +251,7 @@ function escapeXml(value: string): string {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
+    .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 }
 
@@ -262,42 +263,40 @@ function buildAssessmentResultXml(options: {
 }): string {
   const { row, testResultIdentifier, testResultDatestamp, itemIds } = options;
   const lines: string[] = [];
-  lines.push(`<?xml version=\"1.0\" encoding=\"UTF-8\"?>`);
+  lines.push(`<?xml version="1.0" encoding="UTF-8"?>`);
   lines.push(
-    `<assessmentResult xmlns=\"${RESULTS_NAMESPACE}\" xmlns:xsi=\"${XSI_NAMESPACE}\" xsi:schemaLocation=\"${SCHEMA_LOCATION}\">`,
+    `<assessmentResult xmlns="${RESULTS_NAMESPACE}" xmlns:xsi="${XSI_NAMESPACE}" xsi:schemaLocation="${SCHEMA_LOCATION}">`,
   );
-  lines.push(`  <context sourcedId=\"${escapeXml(row.candidateNumber)}\">`);
+  lines.push(`  <context sourcedId="${escapeXml(row.candidateNumber)}">`);
   lines.push(
-    `    <sessionIdentifier sourceID=\"candidateName\" identifier=\"${escapeXml(row.candidateName)}\" />`,
+    `    <sessionIdentifier sourceID="candidateName" identifier="${escapeXml(row.candidateName)}" />`,
   );
   if (row.candidateId) {
     lines.push(
-      `    <sessionIdentifier sourceID=\"candidateId\" identifier=\"${escapeXml(row.candidateId)}\" />`,
+      `    <sessionIdentifier sourceID="candidateId" identifier="${escapeXml(row.candidateId)}" />`,
     );
   }
   if (row.candidateAccount) {
     lines.push(
-      `    <sessionIdentifier sourceID=\"candidateAccount\" identifier=\"${escapeXml(row.candidateAccount)}\" />`,
+      `    <sessionIdentifier sourceID="candidateAccount" identifier="${escapeXml(row.candidateAccount)}" />`,
     );
   }
   lines.push("  </context>");
   if (testResultDatestamp) {
     lines.push(
-      `  <testResult identifier=\"${escapeXml(testResultIdentifier)}\" datestamp=\"${escapeXml(testResultDatestamp)}\" />`,
+      `  <testResult identifier="${escapeXml(testResultIdentifier)}" datestamp="${escapeXml(testResultDatestamp)}" />`,
     );
   } else {
-    lines.push(
-      `  <testResult identifier=\"${escapeXml(testResultIdentifier)}\" />`,
-    );
+    lines.push(`  <testResult identifier="${escapeXml(testResultIdentifier)}" />`);
   }
   itemIds.forEach((itemId, index) => {
     if (testResultDatestamp) {
       lines.push(
-        `  <itemResult identifier=\"${escapeXml(itemId)}\" sequenceIndex=\"${index + 1}\" datestamp=\"${escapeXml(testResultDatestamp)}\" sessionStatus=\"final\" />`,
+        `  <itemResult identifier="${escapeXml(itemId)}" sequenceIndex="${index + 1}" datestamp="${escapeXml(testResultDatestamp)}" sessionStatus="final" />`,
       );
     } else {
       lines.push(
-        `  <itemResult identifier=\"${escapeXml(itemId)}\" sequenceIndex=\"${index + 1}\" sessionStatus=\"final\" />`,
+        `  <itemResult identifier="${escapeXml(itemId)}" sequenceIndex="${index + 1}" sessionStatus="final" />`,
       );
     }
   });
@@ -325,11 +324,15 @@ function ensureWritable(outputDir: string, outputs: OutputPlan[], force: boolean
   }
 }
 
-function writeOutputs(outputs: OutputPlan[], rows: RosterRow[], options: {
-  testResultIdentifier: string;
-  testResultDatestamp?: string;
-  itemIds: string[];
-}): void {
+function writeOutputs(
+  outputs: OutputPlan[],
+  rows: RosterRow[],
+  options: {
+    testResultIdentifier: string;
+    testResultDatestamp?: string;
+    itemIds: string[];
+  },
+): void {
   const rowByResult = new Map(rows.map((row) => [row.resultId, row]));
   outputs.forEach((output) => {
     const row = rowByResult.get(output.resultId);
@@ -389,9 +392,7 @@ function main(): void {
 
   if (args.dryRun) {
     if (args.json) {
-      process.stdout.write(
-        `${JSON.stringify({ mode: "dry-run", outputDir, outputs }, null, 2)}\n`,
-      );
+      process.stdout.write(`${JSON.stringify({ mode: "dry-run", outputDir, outputs }, null, 2)}\n`);
     } else {
       logInfo(`Dry run: ${outputs.length} file(s) would be written to ${outputDir}`, args);
     }
@@ -406,9 +407,7 @@ function main(): void {
   });
 
   if (args.json) {
-    process.stdout.write(
-      `${JSON.stringify({ mode: "write", outputDir, outputs }, null, 2)}\n`,
-    );
+    process.stdout.write(`${JSON.stringify({ mode: "write", outputDir, outputs }, null, 2)}\n`);
   } else if (args.verbose) {
     logInfo(`Wrote ${outputs.length} file(s) to ${outputDir}`, args);
   }
