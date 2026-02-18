@@ -4,6 +4,14 @@
   "type": "module",
   "version": "0.1.0",
   "description": "Generate QTI 3.0 Results Reporting XML from roster CSV files.",
+  "author": "metyatech",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "roster-to-qti-results": "dist/cli.js"
   },
