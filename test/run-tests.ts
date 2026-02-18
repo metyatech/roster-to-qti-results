@@ -180,6 +180,13 @@ function testOptionalDatestamp() {
   assert.ok(!xml.includes("datestamp="), "datestamp should be omitted when not provided");
 }
 
+function testVersion() {
+  const result = runCli(["--version"]);
+  assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+  assert.ok(result.stdout.trim().length > 0);
+  assert.ok(/^\d+\.\d+\.\d+/.test(result.stdout.trim()));
+}
+
 function run() {
   testBasicGeneration();
   testDryRunJson();
@@ -187,6 +194,7 @@ function run() {
   testDefaultOutputDirFromRoster();
   testBomRoster();
   testOptionalDatestamp();
+  testVersion();
   console.log("All tests passed.");
 }
 
