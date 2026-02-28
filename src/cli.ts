@@ -138,7 +138,7 @@ function parseArgs(argv: string[]): CliArgs {
 }
 
 function readPackageVersion(): string {
-  const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
+  const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const pkgPath = path.join(rootDir, "package.json");
   const raw = fs.readFileSync(pkgPath, "utf8");
   const pkg = JSON.parse(raw) as { version?: string };

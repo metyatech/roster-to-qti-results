@@ -4,6 +4,12 @@ Generate QTI 3.0 Results Reporting XML from roster CSV files and an assessment t
 This tool builds "seed" results that can be enriched later with scoring updates and
 rendered with qti-reporter.
 
+## Compatibility
+
+- **Node.js**: >= 20.11.0
+- **Operating System**: Windows, macOS, Linux
+- **QTI**: 3.0 Results Reporting
+
 ## Overview
 
 - Input: roster CSV + QTI assessment test XML
