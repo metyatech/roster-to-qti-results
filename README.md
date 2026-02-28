@@ -19,8 +19,9 @@ npm install
 ## Development commands
 
 ```sh
-npm run verify  # Run lint, format check, typecheck, test, and build
+npm run verify  # Run lint, format check, typecheck, audit scan, test, and build
 npm run lint    # Run ESLint
+npm run scan    # Run npm audit
 npm run format  # Run Prettier
 npm test
 npm run build
