@@ -19,9 +19,10 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "scan": "npm audit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run scan && npm test && npm run build",
     "test": "tsx test/run-tests.ts",
     "roster-to-qti-results": "tsx src/cli.ts",
     "prepare": "husky"
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
+    "compose-agentsmd": "^3.5.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
