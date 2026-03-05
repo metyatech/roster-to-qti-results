@@ -87,3 +87,13 @@ None.
 - **Major**: breaking changes to CLI options, CSV schema, or output structure.
 - **Minor**: new options or output fields that are backwards compatible.
 - **Patch**: bug fixes and internal changes without behavior changes.
+
+## License
+
+MIT - See [LICENSE](LICENSE) for details.
+
+## Related documents
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CHANGELOG.md](CHANGELOG.md)
+- [SECURITY.md](SECURITY.md)
