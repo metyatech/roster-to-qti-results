@@ -1,9 +1,17 @@
 {
   "name": "roster-to-qti-results",
-  "private": true,
+  "private": false,
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generate QTI 3.0 Results Reporting XML from roster CSV files.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metyatech/roster-to-qti-results.git"
+  },
+  "homepage": "https://github.com/metyatech/roster-to-qti-results",
+  "bugs": {
+    "url": "https://github.com/metyatech/roster-to-qti-results/issues"
+  },
   "author": "metyatech",
   "license": "MIT",
   "engines": {
@@ -12,6 +20,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "bin": {
     "roster-to-qti-results": "dist/cli.js"
   },
@@ -21,7 +34,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build",
+    "verify": "npm audit && npm run format:check && npm run lint && npm run typecheck && npm test && npm run build",
     "test": "tsx test/run-tests.ts",
     "roster-to-qti-results": "tsx src/cli.ts",
     "prepare": "husky"
