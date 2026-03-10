@@ -62,25 +62,33 @@ roster-to-qti-results \
 - `--version` / `-V`: show version
 - `--help` / `-h`: show help
 
-## Roster CSV format
+## Documentation
 
-See `docs/input-spec.md` for the full specification.
+For detailed specifications, see:
 
-## Output
-
-See `docs/output-spec.md` for the QTI Results Reporting structure.
+- [Input Specification (Roster CSV)](docs/input-spec.md)
+- [Output Specification (QTI 3.0 Results)](docs/output-spec.md)
+- [CLI Output JSON Schema](docs/cli-output.schema.json)
 
 ## Environment variables
 
 None.
 
-## Release
+## Security
 
-1. Update `CHANGELOG.md` with the new version notes.
-2. Bump the version in `package.json`.
-3. Run `npm run verify`.
-4. Create a Git tag `vX.Y.Z` and push it.
-5. Create a GitHub Release from the corresponding changelog section.
+Please refer to [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development instructions and coding standards.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Changelog
+
+Detailed changes are documented in [CHANGELOG.md](CHANGELOG.md).
 
 ## SemVer policy
 
