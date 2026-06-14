@@ -49,14 +49,15 @@ function testBasicGeneration() {
 
   assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
-  const first = path.join(outputDir, "assessmentResult-2001.xml");
-  const second = path.join(outputDir, "assessmentResult-2002.xml");
+  const first = path.join(outputDir, "assessmentResult-25020001.xml");
+  const second = path.join(outputDir, "assessmentResult-25020002.xml");
   assert.ok(fs.existsSync(first), "expected first output XML");
   assert.ok(fs.existsSync(second), "expected second output XML");
 
   const xml = fs.readFileSync(first, "utf8");
-  assert.ok(xml.includes('<context sourcedId="1001"'));
+  assert.ok(xml.includes('<context sourcedId="25020001"'));
   assert.ok(xml.includes('sourceID="candidateName" identifier="山田太郎"'));
+  assert.ok(xml.includes('sourceID="candidateId" identifier="25020001"'));
   assert.ok(!xml.includes('sourceID="materialTitle"'), "materialTitle should not be emitted");
   assert.ok(
     xml.includes('<testResult identifier="WEB-EXAM-2026" datestamp="2026-01-27T10:00:00+09:00"'),
@@ -90,7 +91,7 @@ function testDryRunJson() {
   assert.strictEqual(payload.mode, "dry-run");
   assert.strictEqual(payload.outputDir, outputDir);
   assert.strictEqual(payload.outputs.length, 2);
-  assert.ok(!fs.existsSync(path.join(outputDir, "assessmentResult-2001.xml")));
+  assert.ok(!fs.existsSync(path.join(outputDir, "assessmentResult-25020001.xml")));
 }
 
 function testInvalidCandidateNumber() {
@@ -112,7 +113,7 @@ function testInvalidCandidateNumber() {
   ]);
 
   assert.notStrictEqual(result.status, 0);
-  assert.ok(result.stderr.includes("candidate_number must include at least one digit"));
+  assert.ok(result.stderr.includes("candidate_number must be exactly 8 digits"));
 }
 
 function testDefaultOutputDirFromRoster() {
@@ -131,8 +132,8 @@ function testDefaultOutputDirFromRoster() {
 
     assert.strictEqual(result.status, 0, result.stderr || result.stdout);
     const outputDir = path.join(rosterDir, "qti-results");
-    assert.ok(fs.existsSync(path.join(outputDir, "assessmentResult-2001.xml")));
-    assert.ok(fs.existsSync(path.join(outputDir, "assessmentResult-2002.xml")));
+    assert.ok(fs.existsSync(path.join(outputDir, "assessmentResult-25020001.xml")));
+    assert.ok(fs.existsSync(path.join(outputDir, "assessmentResult-25020002.xml")));
   } finally {
     fs.rmSync(workDir, { recursive: true, force: true });
     fs.rmSync(rosterDir, { recursive: true, force: true });
@@ -154,8 +155,8 @@ function testBomRoster() {
   ]);
 
   assert.strictEqual(result.status, 0, result.stderr || result.stdout);
-  const first = path.join(outputDir, "assessmentResult-1001.xml");
-  const second = path.join(outputDir, "assessmentResult-1002.xml");
+  const first = path.join(outputDir, "assessmentResult-25020001.xml");
+  const second = path.join(outputDir, "assessmentResult-25020002.xml");
   assert.ok(fs.existsSync(first), "expected first output XML");
   assert.ok(fs.existsSync(second), "expected second output XML");
 }
@@ -175,7 +176,7 @@ function testOptionalDatestamp() {
   ]);
 
   assert.strictEqual(result.status, 0, result.stderr || result.stdout);
-  const xml = fs.readFileSync(path.join(outputDir, "assessmentResult-2001.xml"), "utf8");
+  const xml = fs.readFileSync(path.join(outputDir, "assessmentResult-25020001.xml"), "utf8");
   assert.ok(xml.includes('<testResult identifier="assessment-test"'));
   assert.ok(!xml.includes("datestamp="), "datestamp should be omitted when not provided");
 }

@@ -4,7 +4,7 @@
 
 - Output format: QTI 3.0 Results Reporting XML (`assessmentResult`).
 - One output file per roster entry.
-- File naming: `assessmentResult-<resultId>.xml`.
+- File naming: `assessmentResult-<candidate_number>.xml`.
 
 ## Namespaces
 
@@ -33,7 +33,7 @@ assessmentResult
 
 - `context/@sourcedId`: `candidate_number`
 - `sessionIdentifier[sourceID="candidateName"]`: `candidate_name`
-- `sessionIdentifier[sourceID="candidateId"]`: `candidate_id` when provided
+- `sessionIdentifier[sourceID="candidateId"]`: `candidate_number`
 - `sessionIdentifier[sourceID="candidateAccount"]`: `candidate_account` when provided
 - `testResult/@identifier`: `--test-result-identifier` (default: `assessment-test`)
 - `testResult/@datestamp`: `--test-result-datestamp` (ISO 8601 string, optional)

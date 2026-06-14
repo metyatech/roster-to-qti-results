@@ -179,28 +179,40 @@ function readRosterCsv(rosterPath: string): RosterRow[] {
     if (!candidateNumber) {
       throw new Error(`Missing candidate_number at row ${index + 2}.`);
     }
-    if (!/\d/.test(candidateNumber)) {
-      throw new Error("candidate_number must include at least one digit");
+    if (!/^\d{8}$/.test(candidateNumber)) {
+      throw new Error(
+        `candidate_number must be exactly 8 digits at row ${index + 2}: candidate_number=${candidateNumber}`,
+      );
     }
     if (!candidateName) {
       throw new Error(`Missing candidate_name at row ${index + 2}.`);
     }
 
-    const resultId = resultIdRaw || candidateNumber;
-    if (!resultId) {
-      throw new Error(`Missing result_id at row ${index + 2}.`);
+    if (candidateId && candidateId !== candidateNumber) {
+      throw new Error(
+        `candidate_id must match candidate_number at row ${index + 2}: candidate_number=${candidateNumber}, candidate_id=${candidateId}`,
+      );
     }
-    if (seen.has(resultId)) {
-      throw new Error(`Duplicate result_id: ${resultId}`);
+
+    if (resultIdRaw && resultIdRaw !== candidateNumber) {
+      throw new Error(
+        `result_id must match candidate_number at row ${index + 2}: candidate_number=${candidateNumber}, result_id=${resultIdRaw}`,
+      );
     }
-    seen.add(resultId);
+
+    if (seen.has(candidateNumber)) {
+      throw new Error(
+        `Duplicate candidate_number at row ${index + 2}: candidate_number=${candidateNumber}`,
+      );
+    }
+    seen.add(candidateNumber);
 
     rows.push({
       candidateNumber,
       candidateName,
       candidateAccount: candidateAccount || undefined,
-      candidateId: candidateId || undefined,
-      resultId,
+      candidateId: candidateNumber,
+      resultId: candidateNumber,
     });
   });
 
@@ -271,11 +283,9 @@ function buildAssessmentResultXml(options: {
   lines.push(
     `    <sessionIdentifier sourceID="candidateName" identifier="${escapeXml(row.candidateName)}" />`,
   );
-  if (row.candidateId) {
-    lines.push(
-      `    <sessionIdentifier sourceID="candidateId" identifier="${escapeXml(row.candidateId)}" />`,
-    );
-  }
+  lines.push(
+    `    <sessionIdentifier sourceID="candidateId" identifier="${escapeXml(row.candidateNumber)}" />`,
+  );
   if (row.candidateAccount) {
     lines.push(
       `    <sessionIdentifier sourceID="candidateAccount" identifier="${escapeXml(row.candidateAccount)}" />`,
@@ -306,8 +316,8 @@ function buildAssessmentResultXml(options: {
 
 function buildOutputPlan(outputDir: string, rows: RosterRow[]): OutputPlan[] {
   return rows.map((row) => ({
-    resultId: row.resultId,
-    path: path.join(outputDir, `assessmentResult-${row.resultId}.xml`),
+    resultId: row.candidateNumber,
+    path: path.join(outputDir, `assessmentResult-${row.candidateNumber}.xml`),
   }));
 }
 

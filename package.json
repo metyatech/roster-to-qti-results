@@ -2,7 +2,7 @@
   "name": "roster-to-qti-results",
   "private": true,
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Generate QTI 3.0 Results Reporting XML from roster CSV files.",
   "author": "metyatech",
   "license": "MIT",
